@@ -1,0 +1,104 @@
+diff a/public/js/customer.js b/public/js/customer.js	(rejected hunks)
+@@ -3,21 +3,55 @@ const customerUser = () => { try { return JSON.parse(localStorage.getItem('custo
+ const money = value => `Rp ${Number(value || 0).toLocaleString('id-ID')}`;
+ const safe = value => String(value ?? '').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
+ const customerTranslations = {
+-  id: { home: 'Beranda', search: 'Cari', login: 'Masuk', register: 'Daftar', favorites: 'Favorit', cart: 'Keranjang', logout: 'Keluar', back: 'Kembali ke beranda', order: 'Pesan', empty: 'Belum ada data.', rate: 'Beri rating', review: 'Tulis ulasan', send: 'Kirim rating' },
+-  en: { home: 'Home', search: 'Search', login: 'Login', register: 'Register', favorites: 'Favorites', cart: 'Cart', logout: 'Logout', back: 'Back to home', order: 'Order', empty: 'No data yet.', rate: 'Rate this product', review: 'Write a review', send: 'Submit rating' }
++  id: {
++    home: 'Beranda', search: 'Cari', login: 'Masuk', register: 'Daftar', favorites: 'Favorit', cart: 'Keranjang', logout: 'Keluar', back: 'Kembali ke beranda', order: 'Pesan', empty: 'Belum ada data.', rate: 'Beri rating', review: 'Tulis ulasan', send: 'Kirim rating',
++    login_required: 'Silakan login terlebih dahulu untuk memberi rating atau menambah favorit.',
++    search_eyebrow: 'Koleksi kami', search_title: 'Cari produk', search_desc: 'Temukan rangkaian berdasarkan nama, kategori, atau deskripsi.', search_placeholder: 'Cari buket, flower box...', search_btn: 'Cari', search_empty: 'Produk tidak ditemukan.', search_count: 'produk ditemukan',
++    fav_eyebrow: 'Koleksi pribadi', fav_title: 'Favorit Anda', fav_desc: 'Rangkaian yang ingin Anda simpan untuk nanti.', fav_empty: 'Belum ada produk favorit.',
++    cart_eyebrow: 'Pesanan Anda', cart_title: 'Keranjang', cart_desc: 'Atur jumlah rangkaian sebelum melanjutkan pemesanan.', cart_empty: 'Keranjang masih kosong.', cart_total: 'Total', cart_note: 'Pilih produk pada landing page untuk mengisi detail pengiriman dan mengirim pesanan.',
++    login_eyebrow: 'Mahira Flowers', login_title: 'Masuk ke akun', login_desc: 'Simpan favorit dan kelola keranjang Anda.', login_email: 'Email', login_password: 'Password', login_btn: 'Masuk', login_no_account: 'Belum punya akun?', login_register_link: 'Daftar sekarang', login_checking: 'Memeriksa akun...',
++    reg_eyebrow: 'Mulai perjalanan Anda', reg_title: 'Buat akun', reg_desc: 'Gunakan akun Anda untuk menyimpan favorit dan keranjang.', reg_name: 'Nama lengkap', reg_email: 'Email', reg_password: 'Password', reg_btn: 'Daftar', reg_have_account: 'Sudah punya akun?', reg_login_link: 'Masuk',
++    category_eyebrow: 'Koleksi Mahira', category_title: 'Kategori', category_desc: 'Produk pilihan berdasarkan kategori dari katalog kami.', category_empty: 'Belum ada produk dalam kategori ini.'
++  },
++  en: {
++    home: 'Home', search: 'Search', login: 'Login', register: 'Register', favorites: 'Favorites', cart: 'Cart', logout: 'Logout', back: 'Back to home', order: 'Order', empty: 'No data yet.', rate: 'Rate this product', review: 'Write a review', send: 'Submit rating',
++    login_required: 'Please log in first to rate or favorite a product.',
++    search_eyebrow: 'Our collection', search_title: 'Search products', search_desc: 'Find arrangements by name, category, or description.', search_placeholder: 'Search bouquets, flower box...', search_btn: 'Search', search_empty: 'No products found.', search_count: 'products found',
++    fav_eyebrow: 'Personal collection', fav_title: 'Your favorites', fav_desc: 'Arrangements you want to save for later.', fav_empty: 'No favorite products yet.',
++    cart_eyebrow: 'Your order', cart_title: 'Cart', cart_desc: 'Adjust quantities before continuing with your order.', cart_empty: 'Your cart is still empty.', cart_total: 'Total', cart_note: 'Pick products from the landing page to fill in delivery details and send an order.',
++    login_eyebrow: 'Mahira Flowers', login_title: 'Sign in to your account', login_desc: 'Save favorites and manage your cart.', login_email: 'Email', login_password: 'Password', login_btn: 'Login', login_no_account: "Don't have an account?", login_register_link: 'Register now', login_checking: 'Checking your account...',
++    reg_eyebrow: 'Start your journey', reg_title: 'Create an account', reg_desc: 'Use your account to save favorites and cart items.', reg_name: 'Full name', reg_email: 'Email', reg_password: 'Password', reg_btn: 'Register', reg_have_account: 'Already have an account?', reg_login_link: 'Login',
++    category_eyebrow: "Mahira's collection", category_title: 'Category', category_desc: 'Curated products from this category in our catalog.', category_empty: 'No products in this category yet.'
++  }
+ };
+ const customerLang = () => localStorage.getItem('mahira-lang') || 'id';
+-function setCustomerLanguage(lang) { localStorage.setItem('mahira-lang', lang); document.documentElement.lang = lang; document.querySelectorAll('[data-customer-text]').forEach(el => { const key = el.dataset.customerText; if (customerTranslations[lang][key]) el.textContent = customerTranslations[lang][key]; }); document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang)); const pageCopy = { '/search': ['Search products', 'Find arrangements by name, category, or description.'], '/favorites': ['Your favorites', 'Arrangements you want to save for later.'], '/cart': ['Cart', 'Manage your arrangements before sending an order request.'], '/login': ['Sign in to your account', 'Save favorites and manage your cart.'], '/register': ['Create an account', 'Use your account to save favorites and cart items.'] }; const copy = pageCopy[location.pathname]; if (copy) { const heading = document.querySelector('main h1'); const intro = document.querySelector('main .page-heading .muted, main .form-panel > .muted'); if (heading && lang === 'en') heading.textContent = copy[0]; if (intro && lang === 'en') intro.textContent = copy[1]; } }
+-function customerLanguageSwitch() { const header = document.querySelector('.customer-header'); if (!header || header.querySelector('.customer-language')) return; const switcher = document.createElement('div'); switcher.className = 'customer-language'; switcher.innerHTML = '<button type="button" class="lang-btn" data-lang="id">ID</button><button type="button" class="lang-btn" data-lang="en">EN</button>'; header.appendChild(switcher); switcher.addEventListener('click', event => { if (event.target.matches('.lang-btn')) setCustomerLanguage(event.target.dataset.lang); }); setCustomerLanguage(customerLang()); }
++function setCustomerLanguage(lang) {
++  localStorage.setItem('mahira-lang', lang);
++  document.documentElement.lang = lang;
++  const dict = customerTranslations[lang] || customerTranslations.id;
++  document.querySelectorAll('[data-customer-text]').forEach(el => { const key = el.dataset.customerText; if (dict[key]) el.textContent = dict[key]; });
++  document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.dataset.i18n; if (dict[key]) el.textContent = dict[key]; });
++  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { const key = el.dataset.i18nPlaceholder; if (dict[key]) el.setAttribute('placeholder', dict[key]); });
++  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
++  document.dispatchEvent(new CustomEvent('mahira-lang-changed', { detail: { lang } }));
++}
++function customerLanguageSwitch() { const header = document.querySelector('.customer-header'); if (!header || header.querySelector('.customer-language')) return; const switcher = document.createElement('div'); switcher.className = 'customer-language'; switcher.innerHTML = '<button type="button" class="lang-btn" data-lang="id">ID</button><button type="button" class="lang-btn" data-lang="en">EN</button>'; header.appendChild(switcher); switcher.addEventListener('click', event => { if (event.target.matches('.lang-btn')) setCustomerLanguage(event.target.dataset.lang); }); }
+ async function customerFetch(url, options = {}) {
+   options.headers = { ...(options.headers || {}), Authorization: `Bearer ${customerToken()}` };
+   const response = await fetch(url, options);
+   const data = await response.json().catch(() => ({ success: false, message: 'Respons server tidak valid' }));
+-  if (response.status === 401 || response.status === 403) { localStorage.removeItem('customer_token'); localStorage.removeItem('customer_user'); location.href = `/login?next=${encodeURIComponent(location.pathname)}`; throw new Error('Silakan login terlebih dahulu'); }
++  if (response.status === 401 || response.status === 403) { localStorage.removeItem('customer_token'); localStorage.removeItem('customer_user'); location.href = `/login?next=${encodeURIComponent(location.pathname)}`; throw new Error(customerTranslations[customerLang()].login_required); }
+   if (!response.ok) throw new Error(data.message || 'Permintaan gagal');
+   return data;
+ }
+-function requireCustomer() { if (!customerToken()) { location.href = `/login?next=${encodeURIComponent(location.pathname)}`; return false; } return true; }
++function requireCustomer() {
++  if (!customerToken()) {
++    alert(customerTranslations[customerLang()].login_required);
++    location.href = `/login?next=${encodeURIComponent(location.pathname)}`;
++    return false;
++  }
++  return true;
++}
+ function customerHeader() {
+   customerLanguageSwitch();
+   if (!document.querySelector('link[rel="icon"]')) {
+@@ -43,8 +77,36 @@ async function addToCart(productId, productName = '', productPrice = '') {
+     location.href = target;
+   }
+ }
+-async function toggleFavorite(productId, button) { if (!requireCustomer()) return; try { const data = await customerFetch(`/api/favorites/${productId}`,{method:'POST'}); button.classList.toggle('active', data.active); button.innerHTML = `<i class="fa-${data.active ? 'solid' : 'regular'} fa-heart"></i>`; } catch (e) { alert(e.message); } }
+-document.addEventListener('click', e => { const cart = e.target.closest('[data-cart]'); if (cart) addToCart(cart.dataset.cart, cart.dataset.productName, cart.dataset.productPrice); const favorite = e.target.closest('[data-favorite]'); if (favorite) toggleFavorite(favorite.dataset.favorite, favorite); });
+-document.addEventListener('click', e => { const star = e.target.closest('[data-rating-product]'); if (star) submitRating(star.dataset.ratingProduct, star.dataset.ratingValue); });
+-async function submitRating(productId, rating) { if (!requireCustomer()) return; const reviewText = window.prompt(customerLang() === 'en' ? 'Write a short review:' : 'Tulis ulasan singkat:'); if (!reviewText) return; try { const data = await customerFetch(`/api/reviews/${productId}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ rating: Number(rating), review_text: reviewText }) }); alert(data.message); location.reload(); } catch (error) { alert(error.message); } }
++function popAnimate(el) { if (!el) return; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); el.addEventListener('animationend', () => el.classList.remove('pop'), { once: true }); }
++async function toggleFavorite(productId, button) {
++  if (!requireCustomer()) return;
++  popAnimate(button);
++  button.disabled = true;
++  try {
++    const data = await customerFetch(`/api/favorites/${productId}`, { method: 'POST' });
++    button.classList.toggle('active', data.active);
++    button.innerHTML = `<i class="fa-${data.active ? 'solid' : 'regular'} fa-heart"></i>`;
++  } catch (e) { alert(e.message); }
++  finally { button.disabled = false; }
++}
++document.addEventListener('click', e => {
++  const cart = e.target.closest('[data-cart]');
++  if (cart) addToCart(cart.dataset.cart, cart.dataset.productName, cart.dataset.productPrice);
++  const favorite = e.target.closest('[data-favorite]');
++  if (favorite) toggleFavorite(favorite.dataset.favorite, favorite);
++});
++document.addEventListener('click', e => {
++  const star = e.target.closest('[data-rating-product]');
++  if (star) { popAnimate(star); submitRating(star.dataset.ratingProduct, star.dataset.ratingValue); }
++});
++async function submitRating(productId, rating) {
++  if (!requireCustomer()) return;
++  const reviewText = window.prompt(customerLang() === 'en' ? 'Write a short review:' : 'Tulis ulasan singkat:');
++  if (!reviewText) return;
++  try {
++    const data = await customerFetch(`/api/reviews/${productId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rating: Number(rating), review_text: reviewText }) });
++    alert(data.message);
++    location.reload();
++  } catch (error) { alert(error.message); }
++}
+ document.addEventListener('DOMContentLoaded', customerHeader);

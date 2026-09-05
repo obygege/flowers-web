@@ -1,0 +1,37 @@
+diff a/public/css/style.css b/public/css/style.css	(rejected hunks)
+@@ -187,14 +187,30 @@ footer{background:var(--maroon);color:#f1e6d8;padding:3rem 2rem 1rem;}
+ 
+ /* Product cards */
+ .product-card{transition:transform .35s ease,box-shadow .35s ease;}
+-.product-card:hover{transform:translateY(-8px);box-shadow:0 14px 28px rgba(0,0,0,.12);}
+-.product-img{overflow:hidden;}
++.product-img{overflow:hidden;isolation:isolate;}
+ .product-img img{transition:transform .5s ease;}
+-.product-card:hover .product-img img{transform:scale(1.1);}
+-.heart{transition:transform .25s ease,color .25s ease,background .25s ease;cursor:pointer;}
+-.heart:hover{transform:scale(1.2);}
++.heart{position:absolute;top:10px;right:10px;z-index:5;background:#fff;border:0;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .18s ease,color .2s ease,background .2s ease;}
+ .heart.active i{color:var(--coral);}
+ .heart.active i::before{font-weight:900;}
++.heart:active{transform:scale(.9);}
++.rating-star{touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .15s ease,color .2s ease;}
++.rating-star:active{transform:scale(.85);}
++
++/* Desktop-only hover flourishes (avoids the classic "stuck hover" bug on
++   touchscreens, where a tap fires :hover instead of :click and the button
++   appears to need a second tap) */
++@media (hover:hover) and (pointer:fine){
++  .product-card:hover{transform:translateY(-8px);box-shadow:0 14px 28px rgba(0,0,0,.12);}
++  .product-card:hover .product-img img{transform:scale(1.1);}
++  .heart:hover{transform:scale(1.18);}
++  .rating-star:hover{transform:scale(1.15);}
++}
++
++/* Pop feedback fired via JS right when a click actually registers */
++@keyframes heartPop{0%{transform:scale(1);}35%{transform:scale(1.35);}100%{transform:scale(1);}}
++@keyframes starPop{0%{transform:scale(1);}40%{transform:scale(1.4) rotate(-8deg);}100%{transform:scale(1);}}
++.heart.pop{animation:heartPop .4s ease;}
++.rating-star.pop{animation:starPop .35s ease;}
+ 
+ /* Add to cart click feedback */
+ .add-cart.clicked{animation:pulseCart .4s ease;}
