@@ -110,25 +110,42 @@ const translations = {
     sender_phone_placeholder: "Nomor telepon pengirim",
     from_placeholder: "Dari:",
     to_placeholder: "Untuk:",
-    message_placeholder: "Pesan:"
+    message_placeholder: "Pesan:",
+    footer_intro: "Importir bunga artificial terpercaya dengan koleksi premium, harga terjangkau, dan siap kirim ke seluruh Indonesia.",
+    footer_cat_artificial: "Bunga Artificial",
+    footer_cat_orchid: "Anggrek Phalaenopsis K9",
+    footer_cat_flowerbox: "Flower Box",
+    footer_cat_bouquet: "Bouquet",
+    footer_cat_all: "Semua Koleksi",
+    footer_link_admin: "Hubungi Admin",
+    footer_link_location: "Info Lokasi",
+    footer_link_shipping: "Info Pengiriman",
+    footer_link_return: "Kebijakan Pengembalian",
+    footer_contact_title: "KONTAK",
+    footer_open_maps: "Buka alamat di Google Maps",
+    footer_hours: "Setiap hari, 09.00 - 17.00",
+    about_eyebrow: "Tentang Mahira Flowers",
+    about_title: "Bunga yang dirangkai untuk cerita yang berarti",
+    about_desc: "Kami membantu Anda menyampaikan perhatian melalui rangkaian bunga segar, custom bouquet, dan flower box yang dirancang dengan teliti oleh florist kami.",
+    about_contact_link: "Hubungi kami",
+    about_fact_fresh: "Bunga pilihan setiap hari",
+    about_fact_custom: "Rangkaian sesuai momen",
+    about_fact_care: "Respon florist yang personal"
   }
 };
 
 function initLanguageSwitch() {
   const buttons = document.querySelectorAll('.lang-btn');
-  const i18nEls = document.querySelectorAll('[data-i18n]');
-  const placeholderEls = document.querySelectorAll('[data-i18n-placeholder]');
-
-  // Cache original (English) text so we can always switch back cleanly.
-  i18nEls.forEach(el => {
-    if (!el.dataset.en) el.dataset.en = el.textContent;
-  });
-  placeholderEls.forEach(el => {
-    if (!el.dataset.enPlaceholder) el.dataset.enPlaceholder = el.getAttribute('placeholder') || '';
-  });
 
   function setLanguage(lang) {
+    // Re-query every time (not cached once) so elements added later —
+    // e.g. Swiper's loop-mode duplicate slides, or newly rendered product
+    // cards — are always caught, not just the ones present at page load.
+    const i18nEls = document.querySelectorAll('[data-i18n]');
+    const placeholderEls = document.querySelectorAll('[data-i18n-placeholder]');
+
     i18nEls.forEach(el => {
+      if (!el.dataset.en) el.dataset.en = el.textContent;
       const key = el.getAttribute('data-i18n');
       if (lang === 'id' && translations.id[key]) {
         el.textContent = translations.id[key];
@@ -137,6 +154,7 @@ function initLanguageSwitch() {
       }
     });
     placeholderEls.forEach(el => {
+      if (!el.dataset.enPlaceholder) el.dataset.enPlaceholder = el.getAttribute('placeholder') || '';
       const key = el.getAttribute('data-i18n-placeholder');
       if (lang === 'id' && translations.id[key]) {
         el.setAttribute('placeholder', translations.id[key]);
@@ -154,8 +172,14 @@ function initLanguageSwitch() {
     btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
   });
 
+  // Swiper (loop:true) builds its duplicate slides asynchronously right
+  // after init, so re-apply the language shortly after load to make sure
+  // those clones pick up the correct text too.
   const savedLang = localStorage.getItem('mahira-lang') || 'id';
   setLanguage(savedLang);
+  setTimeout(() => setLanguage(localStorage.getItem('mahira-lang') || 'id'), 300);
+
+  window.mahiraSetLanguage = setLanguage;
 }
 
 function initCategoryDropdown() {
